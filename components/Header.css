@@ -1,0 +1,40 @@
+.header-section {
+    display: flex;
+    background: black;
+    width: 100%;
+    height: auto;
+    padding: 4rem;
+    box-sizing: border-box;
+    row-gap: 1rem;
+    color: white;
+}
+
+.header-wrapper {
+    display: flex;
+    flex-direction:column;
+    row-gap: 1rem;
+    width: 100%;
+
+}
+
+.overview-banner {
+    display: flex;
+    justify-content: left;
+    column-gap: 1rem;
+}
+
+.overview-tag { 
+    
+}
+
+.overview-symbol {
+
+}
+
+.stock-name {
+    font-size: 5rem;
+}
+
+.current-data {
+    font-size: 3rem;
+}

@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  background-color: #ffffff;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden !important;
+  font-family: "Lexend", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+body::-webkit-scrollbar {
+  width: 0.6em;
+}
+
+
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 40px;
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+.scrollbar-track-x {
+  display: none !important;
+}
+
+.arrow{
+  transform: rotate(-35deg);
+}
+
+span.last-update {
+  width: 50%;
+}

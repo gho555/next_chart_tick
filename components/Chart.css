@@ -1,0 +1,10 @@
+.recharts-label {
+  background: black;
+}
+
+.chart-section {
+  background: black;
+  min-height: 0px;
+  height: auto;
+  flex-grow: 1;
+}
