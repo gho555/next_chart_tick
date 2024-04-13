@@ -33,7 +33,7 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  let symbol = context.query.symbol ?? "EMP.A";
+  let symbol = context.query.symbol ?? "AAPL";
   let decimals = context.query.decimals ?? 2;
   let interval = context.query.interval ?? "1day";
   let outputsize = context.query.outputsize ?? "150"; // 6months
