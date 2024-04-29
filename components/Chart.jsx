@@ -12,42 +12,54 @@ import {
   Line,
 } from "recharts";
 import ScaleCalculator from "./ScaleCalculator.js";
-import { format, parseISO, differenceInDays, addDays } from "date-fns";
-let displayedMonths = {};
+import {
+  format,
+  parseISO,
+  differenceInDays,
+  differenceInHours,
+  subHours,
+} from "date-fns";
+let tick_delay = 24;
+let label_delay = 480;
+let last_tick = new Date();
 
 const CustomizedXAxisTick = (props) => {
   const { x, y, payload } = props;
 
   const date = parseISO(payload.value);
-  const formattedDate = format(date, "MMMM");
-  const monthKey = format(date, "MMMM");
+  let formattedDate = "";
 
-  const isMonthDisplayed = !!displayedMonths[monthKey];
+  const is_tick = differenceInHours(date, last_tick) >= tick_delay;
 
-  if (!isMonthDisplayed) {
-    displayedMonths[monthKey] = true;
-  }
+  let is_label = false;
 
+  if (label_delay == 480 && last_tick.getMonth() != date.getMonth())
+    (is_label = true), (formattedDate = format(date, "MMM yyyy"));
+  if (label_delay == 24 && last_tick.getDate() != date.getDate())
+    (is_label = true), (formattedDate = format(date, "MM/dd"));
+  if (label_delay == 1 && last_tick.getHours() != date.getHours())
+    (is_label = true), (formattedDate = format(date, "MM/dd HH:mm"));
+
+  if (is_tick || is_label) last_tick = date;
   return (
-    <g transform={`translate(${x},${y})`}>
-      {
+    <g transform={`translate(${x},${y})`} overflow="visible">
+      {(is_tick || is_label) && (
         <>
           <line
             x1={0}
             y1={-3}
             x2={0}
-            y2={isMonthDisplayed ? 6 : 12}
+            y2={is_label ? 12 : 6}
             stroke="#ccc"
             strokeWidth={2}
           />
-
-          {!isMonthDisplayed && (
-            <text dy={25} textAnchor="middle" fill="#fff">
+          {is_label && (
+            <text dy={25} textAnchor="start" fill="#fff" transform="rotate(35)">
               {formattedDate.toUpperCase()}
             </text>
           )}
         </>
-      }
+      )}
     </g>
   );
 };
@@ -65,9 +77,20 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 export default function Chart({ data }) {
+  console.log(data);
   let previousClose = [];
   let ticks = [];
   let closeIndex = "";
+
+  const range = differenceInDays(
+    data[data.length - 1].datetime,
+    data[0].datetime
+  );
+  if (range > 300) (tick_delay = 24 * 7), (label_delay = 480);
+  else if (range > 50) (tick_delay = 24), (label_delay = 480);
+  else if (range > 1) (tick_delay = 24), (label_delay = 24);
+  else (tick_delay = 1), (label_delay = 1);
+  last_tick = subHours(parseISO(data[0].datetime), tick_delay);
 
   if (data) {
     var closePrices = data.map(function (o) {
@@ -98,7 +121,7 @@ export default function Chart({ data }) {
   return (
     <div className="chart-section">
       <ResponsiveContainer width="97%" height={570}>
-        <AreaChart data={data}>
+        <AreaChart data={data} overflow="visible">
           <defs>
             <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1.5">
               <stop offset="5%" stopColor="#c2b9cc" stopOpacity={0.5} />
