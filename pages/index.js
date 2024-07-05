@@ -24,7 +24,7 @@ export default function Index({ data }) {
       <Header data={data.current} dividends={data.dividends} />
       {/* <Chart data={data.historical}/> */}
       <div className='w-full px-[0px] h-[400px] '>
-          <Chart data={data.historical }/>
+          <Chart data={data.historical } meta={data.meta}/>
         </div>
       </div>
       </section>
@@ -35,8 +35,8 @@ export default function Index({ data }) {
 export async function getServerSideProps(context) {
   let symbol = context.query.symbol ?? "AAPL";
   let decimals = context.query.decimals ?? 2;
-  let interval = context.query.interval ?? "1day";
-  let outputsize = context.query.outputsize ?? "150"; // 6months
+  let interval = context.query.interval ?? "1h";
+  let outputsize = context.query.outputsize ?? "24"; // 6months
   const apiKey = process.env.DATA_API_KEY
 
  const [currentData, historicalData, dividendsData, logoData] = await Promise.all([
@@ -82,6 +82,7 @@ return {
     data: {
       current: current,
       historical: historical.values.reverse(),
+      meta: historical.meta,
       dividends: dividends,
       queryValid: true,
     },
